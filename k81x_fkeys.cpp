@@ -1,137 +1,97 @@
-#include <errno.h>
-#include <fcntl.h>
-#include <linux/hidraw.h>
-#include <linux/input.h>
-#include <sys/ioctl.h>
+// Copyright 2017 Jacek Wozniak <mech@themech.net>
+#include "./k81x.h"
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
 
-using namespace std;
+using std::cerr;
+using std::cout;
+using std::endl;
 
-#define PROGRAM_NAME "k81x_fkeys"
-#define LOGITECH_VENDOR (__u32)0x046d
-#define PRODUCT_K810 (__s16)0xb319
-#define PRODUCT_K811 (__s16)0xb317
+void usage() {
+  cout << "Usage: sudo k81x_fkeys [-d device_path] [-v] on|off" << endl;
+  cout << "Controls the functions of Logitech K810/K811 Keyboard F-keys" << endl
+       << endl;
 
-const unsigned char fn_keys_on[] = {0x10, 0xff, 0x06, 0x15, 0x00, 0x00, 0x00};
-const unsigned char fn_keys_off[] = {0x10, 0xff, 0x06, 0x15, 0x01, 0x00, 0x00};
-
-class FnKeysSwitcher {
- public:
-  FnKeysSwitcher() {
-    device_path_ = "";
-    device_file_ = 0;
-    fn_mode_on_ = false;
-  }
-
-  ~FnKeysSwitcher() {
-    if (device_file_ > 0) {
-      close(device_file_);
-    }
-  }
-
-  bool SetFnMode() {
-    device_file_ = open(device_path_.c_str(), O_RDWR | O_NONBLOCK);
-    if (device_file_ < 0) {
-      cerr << PROGRAM_NAME << ": unable to open device '" << device_path_ << "'"
-           << endl
-           << endl;
-      return false;
-    }
-    struct hidraw_devinfo info;
-    memset(&info, 0x0, sizeof(info));
-    if (ioctl(device_file_, HIDIOCGRAWINFO, &info) < 0) {
-      cerr << PROGRAM_NAME << ": cannot fetch info from device '"
-           << device_path_ << "'" << endl
-           << endl;
-      return false;
-    }
-    if (info.bustype != BUS_BLUETOOTH || info.vendor != LOGITECH_VENDOR ||
-        (info.product != PRODUCT_K810 && info.product != PRODUCT_K811)) {
-      cerr << PROGRAM_NAME << ": cannot identify '" << device_path_
-           << "' as a supported Logitech keyboard" << endl
-           << endl;
-      return false;
-    }
-    if (!fn_mode_on_) {
-      return WriteSequence(fn_keys_off, sizeof(fn_keys_off));
-    }
-    return WriteSequence(fn_keys_on, sizeof(fn_keys_on));
-  }
-
-  bool ParseArguments(int argc, char **argv) {
-    string *param = NULL;
-    string fn_mode;
-    for (int i = 1; i < argc; i++) {
-      if (param != NULL) {
-        *param = argv[i];
-        param = NULL;
-      } else {
-        if (!std::strcmp("-fn", argv[i])) {
-          param = &fn_mode;
-        } else if (!strcmp("-d", argv[i])) {
-          param = &device_path_;
-        } else {
-          cerr << PROGRAM_NAME << ": unknown parameter '" << argv[i] << "'"
-               << endl
-               << endl;
-          return false;
-        }
-      }
-    }
-    if (device_path_.empty()) {
-      cerr << PROGRAM_NAME << ": '-d' parameter not specified" << endl << endl;
-      return false;
-    }
-
-    if (fn_mode == "on") {
-      fn_mode_on_ = true;
-    } else if (fn_mode != "off") {
-      cerr << PROGRAM_NAME << ": '-fn' parameter must be either 'on' or 'off'"
-           << endl
-           << endl;
-      return false;
-    }
-    return true;
-  }
-
-  void PrintHelp() {
-    cout << "Logitech k810/k811 Keyboard Fn-keys switcher" << endl << endl;
-    cout << "Usage: " << PROGRAM_NAME << " -d <device_path> -fn {on|off}"
-         << endl
-         << endl;
-    cout << "Parameters:" << endl;
-    cout << "  -fn\tSet to \"on\" to use F1..F12 keys as standard function keys"
-         << endl;
-    cout << "  -d \tPath to one of the /dev/hidraw* devices, usually "
-            "/dev/hidraw0"
-         << endl;
-  }
-
- private:
-  bool WriteSequence(const unsigned char *sequence, unsigned int size) {
-    if (write(device_file_, sequence, size) < 0) {
-      cerr << PROGRAM_NAME << ": error while writing to the device. "
-           << strerror(errno) << endl;
-      cerr << "Did you run this tool as root?" << endl;
-    }
-    return true;
-  }
-
-  string device_path_;
-  int device_file_;
-  bool fn_mode_on_;
-};
+  cout << "As seen above, this tool needs root privileges to operate. Options:"
+       << endl;
+  cout << "\t-d device_path\tDevice path of the Logitech keyboard, usually"
+       << endl
+       << "\t\t\t/dev/hidraw0. Autodetecion is peformed if this" << endl
+       << "\t\t\tparameter is omitted." << endl;
+  cout << "\t-v\t\tVerbose mode." << endl;
+  cout << "\ton|off\t\t\"on\" causes the F-keys to act like standard" << endl
+       << "\t\t\tF1-F12 keys, \"off\" enables the enhanced functions." << endl;
+}
 
 int main(int argc, char **argv) {
-  FnKeysSwitcher switcher;
-  if (!switcher.ParseArguments(argc, argv)) {
-    switcher.PrintHelp();
+  bool verbose = false, switch_on;
+  const char *device_path = NULL;
+
+  // Fetch the command line arguments.
+  int opt;
+  while ((opt = getopt(argc, argv, "d:v")) != -1) {
+    switch (opt) {
+      case 'd':
+        device_path = optarg;
+        break;
+      case 'v':
+        verbose = true;
+        break;
+    }
+  }
+  if (optind >= argc) {
+    // No on/off argument.
+    usage();
     return 1;
   }
-  if (!switcher.SetFnMode()) {
+  if (!strcmp("on", argv[optind])) {
+    switch_on = true;
+  } else if (!strcmp("off", argv[optind])) {
+    switch_on = false;
+  } else {
+    cerr << "Invalid switch value, should be either \"on\" or \"off\"." << endl;
+    usage();
     return 1;
   }
-  return 0;
+
+  // Check the privileges.
+  if (geteuid() != 0) {
+    cerr << "Warning: Program not running as root. It will most likely fail."
+         << endl;
+  }
+
+  // Initialize the device.
+  K81x *k81x = NULL;
+  if (device_path == NULL) {
+    k81x = K81x::FromAutoFind(verbose);
+    if (NULL == k81x) {
+      cerr << "Error while looking for a Logitech K810/K811 keyboard." << endl;
+    }
+  } else {
+    k81x = K81x::FromDevicePath(device_path, verbose);
+    if (NULL == k81x) {
+      cerr
+          << "Device " << device_path
+          << " cannot be recognized as a supported Logitech K810/K811 keyboard."
+          << endl;
+    }
+  }
+
+  int result = 0;
+  if (k81x != NULL) {
+    // Switch the Kn keys mode.
+    if (!k81x->SetFnKeysMode(switch_on)) {
+      cerr << "Error while setting the F-keys mode." << endl;
+      result = 1;
+    }
+
+    delete k81x;
+  } else {
+    result = 1;
+  }
+  if (result && !verbose) {
+    cerr << "Try running with -v parameter to get more details." << endl;
+  }
+  return result;
 }
