@@ -29,4 +29,4 @@ Now it is time to hook this bash script into udev. Create `/etc/udev/rules.d/00-
 KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{address}=="XX:XX:XX:XX:XX:XX", RUN+="/opt/k81x/k81x.sh %p"
 ```
 
-The `XX:XX:XX:XX:XX:XX` should be replaced with your keyboard Bluetooth address. To find the address simply do to the Bluetooth setting (`All Settings>Bluetooth`), select the Logitech keyboard in the Devices list and copy its address displayed there.
+The `XX:XX:XX:XX:XX:XX` should be replaced with your keyboard Bluetooth address. To find the address simply go to the Bluetooth settings (`All Settings>Bluetooth`), select the Logitech keyboard on the Devices list and copy its address displayed there.
