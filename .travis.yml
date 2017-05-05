@@ -1,5 +1,9 @@
 language: cpp
 
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libudev-dev
+
 before_script: ls
  
 script:
