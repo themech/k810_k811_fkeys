@@ -5,6 +5,7 @@ Logitech K810/K811 Keyboard F-keys switcher for Linux (Ubuntu)
 `sudo k81x_fkeys [-d device_path] [-v] on|off`
 
 ## Building
+Simply use `make` or compile it yourself by running:
 `g++ k81x_fkeys.cpp k81x.cpp -o k81x_fkeys -ludev`
 
 ## Installation
