@@ -1,3 +1,4 @@
+sudo: false
 language: cpp
 
 before_install:
@@ -12,7 +13,8 @@ script:
 before_deploy:
   - find . 
   - export FILE_TO_UPLOAD=$(ls _builds/*/k81x_fkeys-*.tar.gz)
-
+os:
+- linux
 deploy:
   provider: releases
   file_glob: true
