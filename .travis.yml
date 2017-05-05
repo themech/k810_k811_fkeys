@@ -9,3 +9,5 @@ before_script: ls
 script:
   - make 
 
+before_deploy:
+  - find . 
