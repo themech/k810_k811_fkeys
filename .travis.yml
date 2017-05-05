@@ -11,18 +11,16 @@ script:
 
 before_deploy:
   - find . 
+  - export FILE_TO_UPLOAD=$(ls _builds/*/k81x_fkeys-*.tar.gz)
 
 deploy:
   provider: releases
   file_glob: true
   file:
-  - "$HOME/gopath/bin/konfigurator-xc/*/konfigurator_*.tar.gz"
-  - "$HOME/gopath/bin/konfigurator-xc/*/konfigurator_*.zip"
-  - "$HOME/gopath/bin/konfigurator-xc/*/konfigurator_*.deb"
+  - "${FILE_TO_UPLOAD}"
   skip_cleanup: true
   on:
     tags: true
     repo: themech/k810_k811_fkeys
   api_key:
-    secure: 07www59Pp+fiXNlsCdKbBtan+XrU2OBMu4qCoJ+pZN16fKRHvKmiIRKyAUh0mEy2qgOMfU1v1sapN3ycatRKTacnLYWxIFM1eRO1GEuBHDRFiMC0D1MJldygry1oBEKDUUPoJJeCkWUjeBdkmJHE6sz9JZj8AZHea/QZcRD4d/yhzraiA9IKRr/IbjtyDS+bb8ERETdc6+TEFjdK2z/3K7Bm26aE1fSXbq6apePdk+dnHTd0EUacyszG5vIV/CIfrWWuGwv3jaLcy+8/51x+SOJD6aDi7/6nPNGadTq21vdduMOWIIf/jTVlEivyVQ6DarPJl1z2lHtCgZ1wuWkl4J//IMoOM4e4TqQosZcpFDTPaQd0mvh2Bu6MTkjs+KB/aJnzBUciCwtm96wqs+XWpDCBZwJLif1YSvigfPY6LkaJqk6/+qakMZU2Lvz/hdDZYqQtZK9dC35DlHE5uLY6lAlPdDMhE60AIPCi7PK1w9NSRaCIOjKPBagRlsDD0htmVu/DLH9Cnt6nSzcvnxCobvXdJVrgO9Fy/6COXOG56a2uyzzmU2QDsmtyP46UM+YoaEm9JyxCavhnQbAss=
-
+    secure: "RS8wLU62KoAYCbIdrb9tDsLrqWRk5dVS3I0+beukdkOzLoEtduEcNRw4OjJVwR2GW8aM4OxCIi6k7UuOFYtjJw6r4j/PYQvbg3GjghjoHxMbrmzTAjZCtBttPXHGla72xMKqg46xXK3YKvIHzgBxJx2SQ2Gvnmh7SGWyUsxvcVqCDOKI6cczSrlIQBsyChA18BI7iEKmeTlKXiKGHBSzEmIYWitzEqwKfHbbaxrMvGUvbw+AxJpkYLvAl1c8iee/8MKJ9AsY3YKbTcEp4EnQgzEaeuZqTVCA1mZuiXUxEiL1UILvi40E4JA7EXeSJSXxJQXN1rxA6Kw8PtoWhz8aRJ7ouhIHRZOedg8ab/4MobsY0anfp5fNo9/v5grOtfznbG/StoqLtprUOTG/vtMUIgYlGc3us6GH1F26YUPeSd0ebhSmvHeiLEbl9ryt+TCUEq4IeO+VmiOPaLhCraPrSv++kxw47EcuEPNj3qYWSxtHxV+hNAVfnzuIjN6zWGLxjZk2I9ZBuzt2GPEeyJguOlgGJNfrvGOEIqhplrWc01eEtSBjo09TnW4V3bEghmNDKzKU9pvcwLiN+OMbjVdIxfBPT+dz2ZzZz4bMlX78BehvP/j9/+TAjMBzqNXMgaYt64MN+/odTjcFIHuul8uCQE0D4KRNagT+iejo9AclFKE="
