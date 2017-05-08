@@ -1,6 +1,6 @@
 Source: k81x-fkeys
 Maintainer: Jacek 'Mech' Wozniak (mech@themech.net)
-Build-Depends: debhelper (>= 8.0.0), libudev-dev
+Build-Depends: debhelper (>= 7.0.50), libudev-dev
 Standards-Version: 3.9.3
 Section: utils
 
