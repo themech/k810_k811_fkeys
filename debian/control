@@ -1,12 +1,12 @@
 Source: k81x-fkeys
 Maintainer: Jacek 'Mech' Wozniak (mech@themech.net)
-Build-Depends: debhelper (>= 8.0.0)
+Build-Depends: debhelper (>= 8.0.0), libudev-dev
 Standards-Version: 3.9.3
 Section: utils
 
 Package: k81x-fkeys
 Priority: extra
 Architecture: any
-Depends: libudev1, ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libudev1
 Description: Logitech K810/K811 Keyboard F-keys switcher
 

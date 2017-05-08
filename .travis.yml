@@ -1,10 +1,12 @@
 sudo: false
+dist: trusty
 language: cpp
 
 addons:
   apt:
     packages:
     - libudev-dev
+    - libudev1
 
 before_script: ls
  
