@@ -10,6 +10,7 @@ before_script: ls
  
 script:
   - make 
+  - dpkg-buildpackage -us -uc
 
 before_deploy:
   - find . 
