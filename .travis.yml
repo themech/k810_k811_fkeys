@@ -10,11 +10,11 @@ before_script: ls
  
 script:
   - make 
-  - dpkg-buildpackage -us -uc
 
 before_deploy:
-  - find . 
-  - export FILE_TO_UPLOAD=$(ls _builds/*/k81x-fkeys-*.tar.gz)
+  - dpkg-buildpackage -us -uc -b
+  - export FILE_TO_UPLOAD=$(ls ../k81x-fkeys*.deb)
+
 os:
 - linux
 deploy:
