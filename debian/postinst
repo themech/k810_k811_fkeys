@@ -1,2 +1,5 @@
+#!/bin/bash
+set -e
+
 udevadm control --reload-rules
 udevadm trigger udevadm trigger --subsystem-match="hidraw"
