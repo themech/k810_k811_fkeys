@@ -25,12 +25,13 @@ void usage() {
 }
 
 int main(int argc, char **argv) {
-  bool verbose = false, switch_on;
+  bool verbose = false, switch_on, silent = false;
+  int error_return = 1;
   const char *device_path = NULL;
 
   // Fetch the command line arguments.
   int opt;
-  while ((opt = getopt(argc, argv, "d:v")) != -1) {
+  while ((opt = getopt(argc, argv, "d:vs")) != -1) {
     switch (opt) {
       case 'd':
         device_path = optarg;
@@ -38,12 +39,16 @@ int main(int argc, char **argv) {
       case 'v':
         verbose = true;
         break;
-    }
+      case 's':
+        silent = true;
+        error_return = 0;
+        break;
+      }
   }
   if (optind >= argc) {
     // No on/off argument.
     usage();
-    return 1;
+    return error_return;
   }
   if (!strcmp("on", argv[optind])) {
     switch_on = true;
@@ -52,11 +57,11 @@ int main(int argc, char **argv) {
   } else {
     cerr << "Invalid switch value, should be either \"on\" or \"off\"." << endl;
     usage();
-    return 1;
+    return error_return;
   }
 
   // Check the privileges.
-  if (geteuid() != 0) {
+  if (geteuid() != 0 && !silent) {
     cerr << "Warning: Program not running as root. It will most likely fail."
          << endl;
   }
@@ -65,12 +70,12 @@ int main(int argc, char **argv) {
   K81x *k81x = NULL;
   if (device_path == NULL) {
     k81x = K81x::FromAutoFind(verbose);
-    if (NULL == k81x) {
+    if (NULL == k81x && !silent) {
       cerr << "Error while looking for a Logitech K810/K811 keyboard." << endl;
     }
   } else {
     k81x = K81x::FromDevicePath(device_path, verbose);
-    if (NULL == k81x) {
+    if (NULL == k81x && !silent) {
       cerr
           << "Device " << device_path
           << " cannot be recognized as a supported Logitech K810/K811 keyboard."
@@ -81,16 +86,16 @@ int main(int argc, char **argv) {
   int result = 0;
   if (k81x != NULL) {
     // Switch the Kn keys mode.
-    if (!k81x->SetFnKeysMode(switch_on)) {
+    if (!k81x->SetFnKeysMode(switch_on) && !silent) {
       cerr << "Error while setting the F-keys mode." << endl;
-      result = 1;
+      result = error_return;
     }
 
     delete k81x;
   } else {
-    result = 1;
+    result = error_return;
   }
-  if (result && !verbose) {
+  if (result && !verbose && !silent) {
     cerr << "Try running with -v parameter to get more details." << endl;
   }
   return result;
