@@ -1,0 +1,1 @@
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", RUN+="/opt/k81x/k81x.sh %p"

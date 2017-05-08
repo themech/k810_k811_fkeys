@@ -28,6 +28,8 @@ distclean: clean
 	$(RM) $(TARGET)
 
 install: $(TARGET)
-	install -m 0755 $(TARGET) /usr/local/bin
+        install -D -m 0755 $(TARGET) $(DESTDIR)/opt/k81x/$(TARGET)
+	install -D -m 0755 contrib/k81x.sh $(DESTDIR)/opt/k81x/k81x.sh
+	install -D -m 0644 contrib/00-k81x.rules $(DESTDIR)/etc/udev/rules.d/00-k81x.rules
 
 include .depend
