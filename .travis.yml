@@ -27,4 +27,4 @@ deploy:
     tags: true
     repo: themech/k810_k811_fkeys
   api_key:
-    secure: ${GITHUB_SECURE_TOKEN}
+    secure: "BVxinytt1l4zOyFoCAjpt1megBfuVCq4YlJCLV5wMMX+iAJwWQJKhFkeMKWssGYvurAGYrgw1B5/DSZod/aYyvFliUUmt6xzM05YXxAxh3f+tBgGovwA/f2luWw85k8OW2pqI0n9F+1mtXPy56ZH1wzqkjYNog4scO6LsbO/s1KRZ2wwb39+zwS9gD59dyj0aECSzqxcFxO2s4XAKzVwzt5jhYCf5LIYxAvVX/FF7hmgGamsMdjr6pohJEo5DuuU23ZbUX0KJDpmRRPl7x+NbL49zS6+RJQvJXiTBdIXAaI7NUhYsMVmapWp1vP/DzOK0CIMg+Hsq2m/jGwucOy04ZaAW0qedOrK9qvox6k1qERslk7omihLVtBjbi1f9ASxj2Q2PxxVx04wJ27rzAnqizyKgPtJfLFNobxV+v5/emmFmuZfB534DVZqe5+UmxpkF6zVm81oom83pSYjVZGMTy4ImHdHIOaiT/MGfUjwnQYOuhw0SXaEMKkJI52a4zqquifi9/EWcuunAAvkt84gsUV+843DL+TLpFVaYBwiA+eOzn/nKLMkbwHNiGisW9Nv7ji7VQ9/5NeY3pDT5J2q45nRCsBpYJGI9fY67sdWzpyPwMPiYHzNJePJ0PSkePh5kozSzt5zUTqp5ZyMyaZ7fky/+gB2A/2Ozng/jgVmpOE="
