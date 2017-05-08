@@ -27,4 +27,4 @@ deploy:
     tags: true
     repo: themech/k810_k811_fkeys
   api_key:
-    secure: "$GITHUB_SECURE_TOKEN"
+    secure: ${GITHUB_SECURE_TOKEN}
