@@ -13,7 +13,7 @@ script:
 
 before_deploy:
   - find . 
-  - export FILE_TO_UPLOAD=$(ls _builds/*/k81x_fkeys-*.tar.gz)
+  - export FILE_TO_UPLOAD=$(ls _builds/*/k81x-fkeys-*.tar.gz)
 os:
 - linux
 deploy:

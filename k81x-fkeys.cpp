@@ -9,7 +9,7 @@ using std::cout;
 using std::endl;
 
 void usage() {
-  cout << "Usage: sudo k81x_fkeys [-d device_path] [-v] on|off" << endl;
+  cout << "Usage: sudo k81x-fkeys [-d device_path] [-v] on|off" << endl;
   cout << "Controls the functions of Logitech K810/K811 Keyboard F-keys" << endl
        << endl;
 

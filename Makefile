@@ -4,14 +4,14 @@ RM=rm -f
 CPPFLAGS=-g -pthread
 LDFLAGS=-g
 LDLIBS=-ludev
-TARGET=k81x_fkeys
+TARGET=k81x-fkeys
 
-SRCS=k81x.cpp k81x_fkeys.cpp
+SRCS=k81x.cpp k81x-fkeys.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: $(TARGET)
 
-k81x_fkeys: $(OBJS)
+$(TARGET): $(OBJS)
 	$(CXX) $(LDFLAGS) -o $(TARGET) $(OBJS) $(LDLIBS) 
 
 depend: .depend
@@ -26,5 +26,8 @@ clean:
 distclean: clean
 	$(RM) *~ .depend
 	$(RM) $(TARGET)
+
+install: $(TARGET)
+	install -m 0755 $(TARGET) /usr/local/bin
 
 include .depend
