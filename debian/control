@@ -5,8 +5,8 @@ Standards-Version: 3.9.3
 Section: utils
 
 Package: k81x-fkeys
-Priority: extra  
+Priority: extra
 Architecture: any
-Depends: libudev1
+Depends: libudev1, ${shlibs:Depends}
 Description: Logitech K810/K811 Keyboard F-keys switcher
 
