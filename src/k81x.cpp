@@ -114,7 +114,7 @@ bool K81x::WriteSequence(const unsigned char* sequence, unsigned int size) {
            << endl;
     return false;
   } else {
-    if (verbose) cout << "Successfully set the mode of keyboard F-keys!" << endl;
+    if (verbose_) cout << "Successfully set the mode of keyboard F-keys!" << endl;
   }
   return true;
 }
