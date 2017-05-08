@@ -6,7 +6,7 @@ LDFLAGS=-g
 LDLIBS=-ludev
 TARGET=k81x-fkeys
 
-SRCS=k81x.cpp k81x-fkeys.cpp
+SRCS=src/k81x.cpp src/k81x-fkeys.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: $(TARGET)
