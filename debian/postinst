@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+udevadm control --reload-rules
+/opt/k81x/k81x-fkeys -s on
+

@@ -2,22 +2,23 @@
 Logitech K810/K811 Keyboard F-keys switcher for Linux (Ubuntu)
 
 ## Usage
-`sudo k81x_fkeys [-d device_path] [-v] on|off`
+`sudo k81x-fkeys [-d device_path] [-v] on|off`
 
 ## Building
-`g++ k81x_fkeys.cpp k81x.cpp -o k81x_fkeys -ludev`
+Simply use `make` or compile it yourself by running:
+`g++ k81x-fkeys.cpp k81x.cpp -o k81x-fkeys -ludev`
 
 ## Installation
 
 I find it more convenient to setup an udev rule for this utility so it automatically sets the desired F-keys functions when the keyboard is connecting.
 
-In order to do so copy the `k81x_fkeys` binary to some location (like `/opt/k81x/`) and add a following `k81x.sh` bash script in the same directory:
+In order to do so copy the `k81x-fkeys` binary to some location (like `/opt/k81x/`) and add a following `k81x.sh` bash script in the same directory:
 
 ```
 #!/bin/bash
 if [ "$ACTION" == "add" ];
 then
-    /opt/k81x/k81x_fkeys on
+    /opt/k81x/k81x-fkeys on
 fi
 ```
 
