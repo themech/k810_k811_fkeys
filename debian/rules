@@ -3,4 +3,4 @@
 	dh $@
 
 override_dh_auto_install:
-        dh_auto_install --destdir=debian/k81x-fkeys -- INSTALL_ROOT=$${pwd}/debian/k81x-fkeys
+	dh_auto_install --destdir=debian/k81x-fkeys -- INSTALL_ROOT=$${pwd}/debian/k81x-fkeys
