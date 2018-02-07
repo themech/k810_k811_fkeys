@@ -43,3 +43,5 @@ KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{address}=="XX:XX:XX:XX:XX:XX", RUN
 ```
 The `XX:XX:XX:XX:XX:XX` should be replaced with your keyboard Bluetooth address. To find the address simply go to the Bluetooth settings (`All Settings>Bluetooth`), select the Logitech keyboard on the Devices list and copy its address displayed there. 
 You can also skip the `ATTRS{address}=="XX:XX:XX:XX:XX:XX",` part. In that case `k81x.sh` will be also executed for other devices but won't do anything.
+
+Note: On some systems the `address` attribute is not available. You can trying using something like `ENV{HID_UNIQ}="XX:XX:XX:XX:XX:XX"` instead.
