@@ -1,3 +1,9 @@
+k81x-fkeys (0.2-1) unstable; urgency=low
+
+  * Added support for udev path, improved udev scripts.
+
+ -- Jacek 'mech' Wozniak <mech@themech.net>  Sun, 02 Dec 2018 10:12:06 +0100
+
 k81x-fkeys (0.1-1) unstable; urgency=low
 
   * Initial release.
