@@ -67,6 +67,25 @@ K81x* K81x::FromDevicePath(const string device_path, bool verbose) {
   return result;
 }
 
+K81x* K81x::FromDeviceSysPath(const string device_syspath, bool verbose) {
+  struct udev* udev;
+  udev = udev_new();
+  if (!udev) {
+    if (verbose) cerr << "Cannot create udev." << endl;
+    return NULL;
+  }
+  udev_device* raw_dev = udev_device_new_from_syspath(udev, device_syspath.c_str());
+  udev_unref(udev);
+  if (!raw_dev) {
+    if (verbose) cerr << "Unknown udev device " <<  device_syspath << endl;
+    return NULL;
+  }
+  string device_path = udev_device_get_devnode(raw_dev);
+  if (verbose) cout << "Device path: " << device_path << endl;
+
+  return K81x::FromDevicePath(device_path, verbose);
+}
+
 K81x* K81x::FromAutoFind(bool verbose) {
   struct udev* udev;
   udev = udev_new();

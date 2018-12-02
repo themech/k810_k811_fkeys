@@ -7,6 +7,7 @@
 class K81x {
  public:
   static K81x* FromDevicePath(const std::string device_path, bool verbose);
+  static K81x* FromDeviceSysPath(const std::string device_syspath, bool verbose);
   static K81x* FromAutoFind(bool verbose);
   ~K81x();
 
