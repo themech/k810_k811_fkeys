@@ -44,4 +44,8 @@ KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{address}=="XX:XX:XX:XX:XX:XX", RUN
 The `XX:XX:XX:XX:XX:XX` should be replaced with your keyboard Bluetooth address. To find the address simply go to the Bluetooth settings (`All Settings>Bluetooth`), select the Logitech keyboard on the Devices list and copy its address displayed there. 
 You can also skip the `ATTRS{address}=="XX:XX:XX:XX:XX:XX",` part. In that case `k81x.sh` will be also executed for other devices but won't do anything.
 
-Note: On some systems the `address` attribute is not available. You can trying using something like `ENV{HID_UNIQ}="XX:XX:XX:XX:XX:XX"` instead.
+Note: On some systems the `address` attribute is not available. You can try removing it and using this generic rule instead:
+```
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", RUN+="/opt/k81x/k81x.sh %p"
+```
+This means the `k81x.sh` can be triggered also for other HID devices than you keyboard. This most likely is harmless as `k81x-fkeys` iterates over all udev devices and validates their identifiers before sending its configuration sequence.
