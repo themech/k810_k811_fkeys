@@ -11,6 +11,9 @@ addons:
 
 before_script: ls
  
+before_install:
+  - sudo apt-get install debhelper fakeroot cmake
+
 script:
   - make 
 
