@@ -28,9 +28,11 @@ In order to do so copy the `k81x-fkeys` binary to some location (like `/opt/k81x
 
 ```
 #!/bin/bash
-if [ "$ACTION" == "add" ];
+if [ -z "$1" ];
 then
     /opt/k81x/k81x-fkeys -s on
+else
+    /opt/k81x/k81x-fkeys -s -u $1 on
 fi
 ```
 
@@ -39,13 +41,14 @@ You can change `on` to `off` it that's your desired setup. And specify a device 
 Now it is time to hook this bash script into udev. Create `/etc/udev/rules.d/00-k81x.rules` with the following content:
 
 ```
-KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{address}=="XX:XX:XX:XX:XX:XX", RUN+="/opt/k81x/k81x.sh %p"
+ACTION=="add", KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{address}=="XX:XX:XX:XX:XX:XX", RUN+="/opt/k81x/k81x.sh"
 ```
 The `XX:XX:XX:XX:XX:XX` should be replaced with your keyboard Bluetooth address. To find the address simply go to the Bluetooth settings (`All Settings>Bluetooth`), select the Logitech keyboard on the Devices list and copy its address displayed there. 
 You can also skip the `ATTRS{address}=="XX:XX:XX:XX:XX:XX",` part. In that case `k81x.sh` will be also executed for other devices but won't do anything.
 
 Note: On some systems the `address` attribute is not available. You can try removing it and using this generic rule instead:
 ```
-KERNEL=="hidraw*", SUBSYSTEM=="hidraw", RUN+="/opt/k81x/k81x.sh %p"
+ACTION=="add", KERNEL=="hidraw*", SUBSYSTEM=="hidraw", RUN+="/opt/k81x/k81x.sh %S%p"
 ```
-This means the `k81x.sh` can be triggered also for other HID devices than you keyboard. This most likely is harmless as `k81x-fkeys` iterates over all udev devices and validates their identifiers before sending its configuration sequence.
+This means the `k81x.sh` can also be triggered for other HID devices than you keyboard. But as we're passing
+the device path as the parameter, calls from those devices will be ignored.
