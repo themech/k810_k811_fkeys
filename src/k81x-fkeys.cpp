@@ -9,16 +9,20 @@ using std::cout;
 using std::endl;
 
 void usage() {
-  cout << "Usage: sudo k81x-fkeys [-d device_path] [-v] on|off" << endl;
+  cout << "Usage: sudo k81x-fkeys [-d device_path] [-u udev_path] [-v] on|off" << endl;
   cout << "Controls the functions of Logitech K810/K811 Keyboard F-keys" << endl
        << endl;
 
   cout << "As seen above, this tool needs root privileges to operate. Options:"
        << endl;
-  cout << "\t-d device_path\tDevice path of the Logitech keyboard, usually"
+  cout << "\t-d device_path\tOptional Device file path of the Logitech keyboard,"
        << endl
-       << "\t\t\t/dev/hidraw0. Autodetecion is peformed if this" << endl
-       << "\t\t\tparameter is omitted." << endl;
+       << "\t\t\tusually /dev/hidraw0. Autodetecion is peformed if" << endl
+       << "\t\t\tthis and -u parameters are omitted." << endl;
+  cout << "\t-u udev_path\tUdev path of the Logitech keyboard, usually"
+       << endl
+       << "\t\t\tstarting with /sys/devices. Autodetecion is peformed" << endl
+       << "\t\t\tif this and -d parameters are omitted." << endl;
   cout << "\t-v\t\tVerbose mode." << endl;
   cout << "\ton|off\t\t\"on\" causes the F-keys to act like standard" << endl
        << "\t\t\tF1-F12 keys, \"off\" enables the enhanced functions." << endl;
@@ -27,14 +31,17 @@ void usage() {
 int main(int argc, char **argv) {
   bool verbose = false, switch_on, silent = false;
   int error_return = 1;
-  const char *device_path = NULL;
+  const char *device_path = NULL, *device_udevpath = NULL;
 
   // Fetch the command line arguments.
   int opt;
-  while ((opt = getopt(argc, argv, "d:vs")) != -1) {
+  while ((opt = getopt(argc, argv, "d:u:vs")) != -1) {
     switch (opt) {
       case 'd':
         device_path = optarg;
+        break;
+      case 'u':
+        device_udevpath = optarg;
         break;
       case 'v':
         verbose = true;
@@ -68,18 +75,29 @@ int main(int argc, char **argv) {
 
   // Initialize the device.
   K81x *k81x = NULL;
-  if (device_path == NULL) {
+  if (device_path == NULL && device_udevpath == NULL) {
     k81x = K81x::FromAutoFind(verbose);
     if (NULL == k81x && !silent) {
       cerr << "Error while looking for a Logitech K810/K811 keyboard." << endl;
     }
   } else {
-    k81x = K81x::FromDevicePath(device_path, verbose);
-    if (NULL == k81x && !silent) {
-      cerr
-          << "Device " << device_path
-          << " cannot be recognized as a supported Logitech K810/K811 keyboard."
-          << endl;
+    if (NULL != device_path) {
+      k81x = K81x::FromDevicePath(device_path, verbose);
+      if (NULL == k81x && !silent) {
+        cerr
+            << "Device " << device_path
+            << " cannot be recognized as a supported Logitech K810/K811 keyboard."
+            << endl;
+      }
+    }
+    if (NULL == k81x && NULL != device_udevpath) {
+      k81x = K81x::FromDeviceSysPath(device_udevpath, verbose);
+      if (NULL == k81x && !silent) {
+        cerr
+            << "Udev device " << device_udevpath
+            << " cannot be recognized as a supported Logitech K810/K811 keyboard."
+            << endl;
+      }
     }
   }
 
