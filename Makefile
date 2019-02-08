@@ -2,7 +2,7 @@ CC=gcc
 CXX=g++
 RM=rm -f
 CPPFLAGS=-g -pthread
-LDFLAGS=-g
+LDFLAGS=-g -Wl,-z,now,-z,relro
 LDLIBS=-ludev
 TARGET=k81x-fkeys
 
