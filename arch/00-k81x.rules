@@ -1,1 +1,1 @@
-ACTION=="add", KERNEL=="hidraw*", SUBSYSTEM=="hidraw", RUN+="/opt/k81x/k81x-fkeys -s -u %S%p on"
+ACTION=="add", KERNEL=="hidraw*", SUBSYSTEM=="hidraw", RUN+="/usr/bin/k81x-fkeys -s -u %S%p on"
