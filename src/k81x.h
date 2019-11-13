@@ -4,6 +4,8 @@
 
 #include <string>
 
+struct DeviceInfo;
+
 class K81x {
  public:
   static K81x* FromDevicePath(const std::string device_path, bool verbose);
@@ -14,12 +16,14 @@ class K81x {
   bool SetFnKeysMode(bool enabled);
 
  private:
-  K81x(std::string device_path, int device_file, bool verbose);
+
+  K81x(std::string device_path, int device_file, const DeviceInfo& device_info, bool verbose);
 
   bool WriteSequence(const unsigned char* sequence, unsigned int size);
 
   int device_file_;
   std::string device_path_;
+  const DeviceInfo& device_info_;
   bool verbose_;
 };
 

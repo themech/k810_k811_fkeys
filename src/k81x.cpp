@@ -19,14 +19,40 @@ using std::string;
 #define LOGITECH_VENDOR (__u32)0x046d
 #define PRODUCT_K810 (__s16)0xb319
 #define PRODUCT_K811 (__s16)0xb317
+#define PRODUCT_K380 (__s16)0xb342
+#define PRODUCT_K780 (__s16)0xc52b
 
-const unsigned char fn_keys_on[] = {0x10, 0xff, 0x06, 0x15, 0x00, 0x00, 0x00};
-const unsigned char fn_keys_off[] = {0x10, 0xff, 0x06, 0x15, 0x01, 0x00, 0x00};
+const unsigned char k81x_fn_keys_on[]  = {0x10, 0xff, 0x06, 0x15, 0x00, 0x00, 0x00};
+const unsigned char k81x_fn_keys_off[] = {0x10, 0xff, 0x06, 0x15, 0x01, 0x00, 0x00};
+const unsigned char k380_fn_keys_on[]  = {0x10, 0xff, 0x0b, 0x1e, 0x00, 0x00, 0x00};
+const unsigned char k380_fn_keys_off[] = {0x10, 0xff, 0x0b, 0x1e, 0x01, 0x00, 0x00};
+const unsigned char k780_fn_keys_on[]  = {0x10, 0x02, 0x0c, 0x1c, 0x00, 0x00, 0x00};
+const unsigned char k780_fn_keys_off[] = {0x10, 0x02, 0x0c, 0x1c, 0x01, 0x00, 0x00};
 
-K81x::K81x(string device_path, int device_file, bool verbose) {
-  device_path_ = device_path;
-  device_file_ = device_file;
-  verbose_ = verbose;
+
+struct DeviceInfo {
+  const string name;
+  const __s16 product;
+  const unsigned char* fn_keys_on;
+  const unsigned int fn_keys_on_size;
+  const unsigned char* fn_keys_off;
+  const unsigned int fn_keys_off_size;
+};
+
+
+const DeviceInfo KnownDevices[] = {
+  { "K810", PRODUCT_K810, k81x_fn_keys_on, sizeof(k81x_fn_keys_on), k81x_fn_keys_on, sizeof(k81x_fn_keys_on) },
+  { "K811", PRODUCT_K811, k81x_fn_keys_on, sizeof(k81x_fn_keys_on), k81x_fn_keys_on, sizeof(k81x_fn_keys_on) },
+  { "K380", PRODUCT_K380, k380_fn_keys_on, sizeof(k380_fn_keys_on), k380_fn_keys_on, sizeof(k380_fn_keys_on) },
+  { "K780", PRODUCT_K780, k780_fn_keys_on, sizeof(k780_fn_keys_on), k780_fn_keys_on, sizeof(k780_fn_keys_on) },
+};
+
+
+K81x::K81x(string device_path, int device_file, const DeviceInfo& device_info, bool verbose) :
+ device_path_(device_path_),
+ device_file_(device_file),
+ device_info_(device_info),
+ verbose_(verbose) {
 }
 
 K81x::~K81x() {
@@ -47,15 +73,20 @@ K81x* K81x::FromDevicePath(const string device_path, bool verbose) {
   if (ioctl(device_file_, HIDIOCGRAWINFO, &info) >= 0) {
     if (verbose)
       cout << "Checking whether " << device_path
-           << " is a Logitech K810/K811 keyboard." << endl;
-    if (info.bustype != BUS_BLUETOOTH || info.vendor != LOGITECH_VENDOR ||
-        (info.product != PRODUCT_K810 && info.product != PRODUCT_K811)) {
-      if (verbose)
-        cerr << "Cannot identify " << device_path
-             << " as a supported Logitech Keyboard" << endl;
-
-    } else {
-      result = new K81x(device_path, device_file_, verbose);
+           << " is a supported Logitech keyboard." << endl;
+    if ( info.bustype == BUS_BLUETOOTH && info.vendor == LOGITECH_VENDOR) {
+      for (const DeviceInfo &device_info : KnownDevices) {
+        if (info.product == device_info.product) {
+          if (verbose)
+            cout << "Device " << device_path << " recognized as the Logitech "
+              << device_info.name << " keyboard." << endl;
+          result = new K81x(device_path, device_file_, device_info, verbose);
+        }
+      }
+    }
+    if (result == NULL && verbose) {
+      cerr << "Cannot identify " << device_path
+           << " as a supported Logitech Keyboard" << endl;
     }
   } else {
     if (verbose)
@@ -121,9 +152,9 @@ K81x* K81x::FromAutoFind(bool verbose) {
 
 bool K81x::SetFnKeysMode(bool enabled) {
   if (enabled) {
-    return WriteSequence(fn_keys_on, sizeof(fn_keys_on));
+    return WriteSequence(device_info_.fn_keys_on, device_info_.fn_keys_on_size);
   }
-  return WriteSequence(fn_keys_off, sizeof(fn_keys_off));
+  return WriteSequence(device_info_.fn_keys_off, device_info_.fn_keys_off_size);
 }
 
 bool K81x::WriteSequence(const unsigned char* sequence, unsigned int size) {
