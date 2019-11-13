@@ -1,7 +1,6 @@
-CC=gcc
 CXX=g++
 RM=rm -f
-CPPFLAGS=-g -pthread
+CPPFLAGS=-std=c++11 -g -pthread
 LDFLAGS=-g -Wl,-z,now,-z,relro
 LDLIBS=-ludev
 TARGET=k81x-fkeys
