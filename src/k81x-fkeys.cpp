@@ -1,8 +1,8 @@
 // Copyright 2017 Jacek Wozniak <mech@themech.net>
 #include "./k81x.h"
-#include <unistd.h>
 #include <cstring>
 #include <iostream>
+#include <unistd.h>
 
 using std::cerr;
 using std::cout;
@@ -31,7 +31,7 @@ void usage() {
 int main(int argc, char **argv) {
   bool verbose = false, switch_on, silent = false;
   int error_return = 1;
-  const char *device_path = NULL, *device_udevpath = NULL;
+  const char *device_path = nullptr, *device_udevpath = nullptr;
 
   // Fetch the command line arguments.
   int opt;
@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
   } else if (!strcmp("off", argv[optind])) {
     switch_on = false;
   } else {
-    cerr << "Invalid switch value, should be either \"on\" or \"off\"." << endl;
+    cerr << R"(Invalid switch value, should be either "on" or "off".)" << endl;
     usage();
     return error_return;
   }
@@ -74,25 +74,25 @@ int main(int argc, char **argv) {
   }
 
   // Initialize the device.
-  K81x *k81x = NULL;
-  if (device_path == NULL && device_udevpath == NULL) {
+  K81x *k81x = nullptr;
+  if (device_path == nullptr && device_udevpath == nullptr) {
     k81x = K81x::FromAutoFind(verbose);
-    if (NULL == k81x && !silent) {
+    if (nullptr == k81x && !silent) {
       cerr << "Error while looking for a Logitech K810/K811 keyboard." << endl;
     }
   } else {
-    if (NULL != device_path) {
+    if (nullptr != device_path) {
       k81x = K81x::FromDevicePath(device_path, verbose);
-      if (NULL == k81x && !silent) {
+      if (nullptr == k81x && !silent) {
         cerr
             << "Device " << device_path
             << " cannot be recognized as a supported Logitech K810/K811 keyboard."
             << endl;
       }
     }
-    if (NULL == k81x && NULL != device_udevpath) {
+    if (nullptr == k81x && nullptr != device_udevpath) {
       k81x = K81x::FromDeviceSysPath(device_udevpath, verbose);
-      if (NULL == k81x && !silent) {
+      if (nullptr == k81x && !silent) {
         cerr
             << "Udev device " << device_udevpath
             << " cannot be recognized as a supported Logitech K810/K811 keyboard."
@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
   }
 
   int result = 0;
-  if (k81x != NULL) {
+  if (k81x != nullptr) {
     // Switch the Kn keys mode.
     if (!k81x->SetFnKeysMode(switch_on) && !silent) {
       cerr << "Error while setting the F-keys mode." << endl;

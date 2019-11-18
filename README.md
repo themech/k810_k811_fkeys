@@ -22,7 +22,7 @@ pacaur -S k81x-fkeys
 ### Building
 Simply download the source and either run `make` or compile it yourself by running:
 
-```g++ k81x-fkeys.cpp k81x.cpp -o k81x-fkeys -ludev```
+```g++ -std=c++11 k81x-fkeys.cpp k81x.cpp -o k81x-fkeys -ludev```
 
 ### Installing via make
 You can type `sudo make install` to install the binary and udev the scripts. 
