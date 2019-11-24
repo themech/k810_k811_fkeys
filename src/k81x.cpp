@@ -41,10 +41,10 @@ struct DeviceInfo {
 
 
 const DeviceInfo KnownDevices[] = {
-  { "K810", PRODUCT_K810, k81x_fn_keys_on, sizeof(k81x_fn_keys_on), k81x_fn_keys_on, sizeof(k81x_fn_keys_on) },
-  { "K811", PRODUCT_K811, k81x_fn_keys_on, sizeof(k81x_fn_keys_on), k81x_fn_keys_on, sizeof(k81x_fn_keys_on) },
-  { "K380", PRODUCT_K380, k380_fn_keys_on, sizeof(k380_fn_keys_on), k380_fn_keys_on, sizeof(k380_fn_keys_on) },
-  { "K780", PRODUCT_K780, k780_fn_keys_on, sizeof(k780_fn_keys_on), k780_fn_keys_on, sizeof(k780_fn_keys_on) },
+  { "K810", PRODUCT_K810, k81x_fn_keys_on, sizeof(k81x_fn_keys_on), k81x_fn_keys_off, sizeof(k81x_fn_keys_off) },
+  { "K811", PRODUCT_K811, k81x_fn_keys_on, sizeof(k81x_fn_keys_on), k81x_fn_keys_off, sizeof(k81x_fn_keys_off) },
+  { "K380", PRODUCT_K380, k380_fn_keys_on, sizeof(k380_fn_keys_on), k380_fn_keys_off, sizeof(k380_fn_keys_off) },
+  { "K780", PRODUCT_K780, k780_fn_keys_on, sizeof(k780_fn_keys_on), k780_fn_keys_off, sizeof(k780_fn_keys_off) },
 };
 
 
@@ -148,7 +148,7 @@ K81x* K81x::FromAutoFind(bool verbose) {
   udev_enumerate_unref(enumerate);
   udev_unref(udev);
   if (nullptr == result) {
-    if (verbose) { cerr << "Couldn't find a Logitech K810/K811 keyboard." << endl; }
+    if (verbose) { cerr << "Couldn't find supported Logitech keyboard." << endl; }
   }
 
   return result;
