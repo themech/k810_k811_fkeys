@@ -10,7 +10,7 @@ using std::endl;
 
 void usage() {
   cout << "Usage: sudo k81x-fkeys [-d device_path] [-u udev_path] [-v] on|off" << endl;
-  cout << "Controls the functions of Logitech K810/K811 Keyboard F-keys" << endl
+  cout << "Controls the functions of Logitech K810/K811/K380/K780 Keyboard F-keys" << endl
        << endl;
 
   cout << "As seen above, this tool needs root privileges to operate. Options:"
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
   if (device_path == nullptr && device_udevpath == nullptr) {
     k81x = K81x::FromAutoFind(verbose);
     if (nullptr == k81x && !silent) {
-      cerr << "Error while looking for a Logitech K810/K811 keyboard." << endl;
+      cerr << "Error: supported Logitech keyboard not found." << endl;
     }
   } else {
     if (nullptr != device_path) {
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
       if (nullptr == k81x && !silent) {
         cerr
             << "Device " << device_path
-            << " cannot be recognized as a supported Logitech K810/K811 keyboard."
+            << " cannot be recognized as a supported Logitech keyboard."
             << endl;
       }
     }
@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
       if (nullptr == k81x && !silent) {
         cerr
             << "Udev device " << device_udevpath
-            << " cannot be recognized as a supported Logitech K810/K811 keyboard."
+            << " cannot be recognized as a supported Logitech keyboard."
             << endl;
       }
     }
