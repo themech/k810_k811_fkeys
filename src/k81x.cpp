@@ -20,7 +20,7 @@ constexpr __u32 LOGITECH_VENDOR = 0x046d;
 constexpr __s16 PRODUCT_K810 = 0xb319;
 constexpr __s16 PRODUCT_K811 = 0xb317;
 constexpr __s16 PRODUCT_K380 = 0xb342;
-constexpr __s16 PRODUCT_K780 = 0xc52b;
+constexpr __s16 PRODUCT_K780 = 0xb33b;
 
 const unsigned char k81x_fn_keys_on[]  = {0x10, 0xff, 0x06, 0x15, 0x00, 0x00, 0x00};
 const unsigned char k81x_fn_keys_off[] = {0x10, 0xff, 0x06, 0x15, 0x01, 0x00, 0x00};
