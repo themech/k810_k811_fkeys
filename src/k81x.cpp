@@ -74,6 +74,9 @@ K81x* K81x::FromDevicePath(const string& device_path, bool verbose) {
     if (verbose) {
       cout << "Checking whether " << device_path
            << " is a supported Logitech keyboard." << endl;
+      cout << "Bus type: 0x" << std::hex << info.bustype << "\n";
+      cout << "Vendor:   0x" << std::hex << info.vendor << "\n";
+      cout << "Product:  0x" << std::hex << info.product  << "\n";
     }
     if (info.bustype == BUS_BLUETOOTH && info.vendor == LOGITECH_VENDOR) {
       for (const DeviceInfo &device_info : KnownDevices) {
