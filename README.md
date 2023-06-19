@@ -19,7 +19,6 @@ gpg --recv-keys --keyserver hkp://pool.sks-keyservers.net 7FBFBFD17A45CAE7
 pacaur -S k81x-fkeys
 ```
 
-
 ## Installing from source code
 
 ### Building
