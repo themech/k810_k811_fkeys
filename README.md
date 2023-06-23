@@ -11,6 +11,8 @@ If your system supports deb files, you can simply grab an automatic build from h
 
 `sudo dpkg -i k81x-fkeys_<version>_amd64.deb`
 
+You can then run the program at `/opt/k81x/k81x-fkeys`.
+
 For Arch Linux you can use the AUR package:
 ```
 gpg --recv-keys --keyserver hkp://pool.sks-keyservers.net 7FBFBFD17A45CAE7
